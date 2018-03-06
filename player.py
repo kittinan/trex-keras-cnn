@@ -7,8 +7,8 @@ import pyscreenshot as ImageGrab
 import keyboard
 
 # Force to use only CPU
-os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"   # see issue #152
-os.environ["CUDA_VISIBLE_DEVICES"] = ""
+#os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"   # see issue #152
+#os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 # Load Model
 model = model_from_json(open("model.json", "r").read())
@@ -20,8 +20,7 @@ labels = ["Down", "Right", "Up"]
 
 i = 0
 while True:
-    im = ImageGrab.grab(bbox=(350,350,1000,480))
-    #im = ImageGrab.grab(bbox=(630,350,1280,480), childprocess=False)
+    im = ImageGrab.grab(bbox=(350,350,1000,480), childprocess=False)
     im = np.array(im.convert("L").resize((260, 52)))
     im = im / 255
 
@@ -31,9 +30,9 @@ while True:
     result = np.argmax(r)
 
     if result == 0:
-        keyboard.press_and_release("down")
+        keyboard.press_and_release(keyboard.KEY_DOWN)
     elif result == 2:
-        keyboard.press_and_release("up")
+        keyboard.press_and_release(keyboard.KEY_UP)
 
     print("[{}] Predict: {}".format(i, labels[result]))
     i += 1

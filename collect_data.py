@@ -10,7 +10,6 @@ def record_screen(key):
     i += 1
     print("{}: {}".format(key, i))
     im = ImageGrab.grab(bbox=(350,350,1000,480))
-    #im = ImageGrab.grab(bbox=(630,350,1280,480), childprocess=False)
     im.save("./img/{}_{}_{}.png".format(key, i, uuid.uuid4()))
 
 
