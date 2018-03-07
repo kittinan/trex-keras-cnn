@@ -9,6 +9,16 @@ from PIL import Image
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OneHotEncoder
 
+# Limit GPU memory usage
+# https://github.com/keras-team/keras/issues/1538#issuecomment-241975687
+"""
+import tensorflow as tf
+from keras.backend.tensorflow_backend import set_session
+config = tf.ConfigProto()
+config.gpu_options.per_process_gpu_memory_fraction = 0.5
+set_session(tf.Session(config=config))
+"""
+
 def onehot_labels(values):
     label_encoder = LabelEncoder()
     integer_encoded = label_encoder.fit_transform(values)
@@ -19,24 +29,27 @@ def onehot_labels(values):
 
 imgs = glob.glob("./img/*.png")
 
+width = 250
+heigh = 50
+
 X = []
 Y = []
 for img in imgs:
     filename = os.path.basename(img)
     label = filename.split("_")[0]
-    im = np.array(Image.open(img).convert("L").resize((260, 52)))
+    im = np.array(Image.open(img).convert("L").resize((width, heigh)))
     im = im / 255
     X.append(im)
     Y.append(label)
 
 X = np.array(X)
-X = X.reshape(X.shape[0], 260, 52, 1)
+X = X.reshape(X.shape[0], width, heigh, 1)
 Y = onehot_labels(Y)
 
 model = Sequential()
 model.add(Conv2D(32, kernel_size=(3, 3),
                  activation='relu',
-                 input_shape=(260, 52, 1)))
+                 input_shape=(width, heigh, 1)))
 model.add(Conv2D(64, (3, 3), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
