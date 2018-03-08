@@ -1,8 +1,8 @@
 # T-Rex Keras CNN
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=mKNGTMolFBU" target="_BLANK">
-    <img src="screenshot/screenshot.png" width="500" />
+  <a href="https://www.youtube.com/watch?v=oTCmk94YMvU" target="_BLANK">
+    <img src="screenshot/screenshot.png" width="80%" />
   </a>
 </p>
 
