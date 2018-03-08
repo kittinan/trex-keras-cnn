@@ -25,7 +25,7 @@ set_session(tf.Session(config=config))
 #os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 width = 250
-heigh = 50
+height = 50
 
 # Load Model
 model = model_from_json(open("model.json", "r").read())
@@ -35,28 +35,44 @@ print(model.summary())
 # Down = 0, Right = 1, UP = 2
 labels = ["Down", "Right", "Up"]
 
-os.system('clear')
 
-time_start = time.clock()
+framerate_time = time.time()
+counter = 0
 i = 0
+current_framerate = 0
 while True:
+
+    time_start = time.time()
     img = sct.grab(mon)
     im = Image.frombytes('RGB', img.size, img.rgb)
-    im = np.array(im.convert("L").resize((width, heigh)))
+    im = np.array(im.convert("L").resize((width, height)))
     im = im / 255
 
+    time_grab = time.time() - time_start
+    time_start = time.time()
+
     X = np.array([im])
-    X = X.reshape(X.shape[0], width, heigh, 1)
+    X = X.reshape(X.shape[0], width, height, 1)
     r = model.predict(X)
     result = np.argmax(r)
 
-    if r[0][0] > 0.5:
+    time_predict = time.time() - time_start
+
+    if result == 0:
         keyboard.press_and_release(keyboard.KEY_DOWN)
-    elif r[0][2] > 0.5:
+    elif result == 2:
         keyboard.press_and_release(keyboard.KEY_UP)
 
-    #print("[{}] Predict: {}".format(i, labels[result]))
-    print("", end="\r")
-    print("Down: {:7.2%} | Right: {:7.2%} | Up: {:7.2%}".format(r[0][0], r[0][1], r[0][2]), end="\r")
+    counter+=1
+    if (time.time() - framerate_time) > 1 :
+        current_framerate = counter / (time.time() - framerate_time)
+        counter = 0
+        framerate_time = time.time()
+
+    os.system('clear')
+    print("Down: {:3.2%} \nRight: {:3.2%} \nUp: {:3.2%} \n".format(r[0][0], r[0][1], r[0][2]), end="\r")
+    print("=========================")
+    print("Frame Count: {}\nCurrent Frame Rate: {:.2f}\nGrab Screen: {:.5f}\nPredict: {:.5f}".format(i, current_framerate, time_grab, time_predict))
+    print("=========================")
     i += 1
     time.sleep(0.15)
