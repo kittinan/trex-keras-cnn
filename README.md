@@ -60,7 +60,7 @@ train until 98%+ accuracy. the weight file trex_weight.h5 will create.
 run [player.py](https://github.com/kittinan/trex-keras-cnn/blob/master/player.py) as root (require root by keybaord package)
 
 ```bash
-python train.py
+python player.py
 ```
 
 It possible T-Rex will jump before barrier, you can modify delay in [player.py](https://github.com/kittinan/trex-keras-cnn/blob/f270752de93caefc45182eb270163b78c0093972/player.py#L43)
