@@ -13,13 +13,13 @@ from sklearn.model_selection import train_test_split
 
 # Limit GPU memory usage
 # https://github.com/keras-team/keras/issues/1538#issuecomment-241975687
-
+"""
 import tensorflow as tf
 from keras.backend.tensorflow_backend import set_session
 config = tf.ConfigProto()
-config.gpu_options.per_process_gpu_memory_fraction = 1
+config.gpu_options.per_process_gpu_memory_fraction = 0.7
 set_session(tf.Session(config=config))
-
+"""
 
 def onehot_labels(values):
     label_encoder = LabelEncoder()
@@ -31,8 +31,8 @@ def onehot_labels(values):
 
 imgs = glob.glob("./img/*.png")
 
-width = 250
-height = 50
+width = 200
+height = 40
 
 X = []
 Y = []
@@ -48,7 +48,7 @@ X = np.array(X)
 X = X.reshape(X.shape[0], width, height, 1)
 Y = onehot_labels(Y)
 
-train_X, test_X, train_y, test_y = train_test_split(X, Y, train_size=0.75, random_state=random.randint(112, 1112))
+train_X, test_X, train_y, test_y = train_test_split(X, Y, test_size=0.25, random_state=random.randint(112, 1112))
 
 model = Sequential()
 model.add(Conv2D(32, kernel_size=(3, 3),
@@ -70,7 +70,7 @@ print(model.summary())
 
 model.compile(loss='categorical_crossentropy', optimizer='SGD', metrics=['accuracy'])
 
-model.fit(X, Y, epochs=20, batch_size=64)
+model.fit(train_X, train_y, epochs=20, batch_size=64)
 
 scores = model.evaluate(train_X, train_y)
 print("\n%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
