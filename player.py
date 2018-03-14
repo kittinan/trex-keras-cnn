@@ -42,6 +42,8 @@ i = 0
 current_framerate = 0
 delay = 0.04
 count_time = 0
+last_result = 1
+
 while True:
 
     time_start = time.time()
@@ -60,10 +62,16 @@ while True:
 
     time_predict = time.time() - time_start
 
-    if result == 0:
-        keyboard.press_and_release(keyboard.KEY_DOWN)
+    if ((result == 0) and (last_result != 0)):
+        # Hold down button
+        keyboard.press(keyboard.KEY_DOWN)
     elif result == 2:
+        if last_result == 0:
+            # Release down button
+            keyboard.release(keyboard.KEY_DOWN)
         keyboard.press_and_release(keyboard.KEY_UP)
+
+    last_result = result
 
     counter+=1
     if (time.time() - framerate_time) > 1 :
