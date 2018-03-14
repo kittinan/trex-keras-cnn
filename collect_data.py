@@ -35,7 +35,7 @@ while True:
     try:
         if keyboard.is_pressed(keyboard.KEY_UP):
             record_screen(record_id, "up")
-            time.sleep(0.2)
+            time.sleep(0.1)
         elif keyboard.is_pressed(keyboard.KEY_DOWN):
             record_screen(record_id, "down")
             time.sleep(0.1)
